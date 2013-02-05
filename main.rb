@@ -14,7 +14,11 @@ title = gets.chomp.downcase.split
 movie = HTTParty.get("http://www.omdbapi.com/?t=#{title.join('+')}")
 movie_hash = JSON(movie.body)
 
-sql = "insert into movies (#{movie_hash.keys.join(', ')}) values ('#{movie_hash.values.join('\', \'')}')"
+begin
+  sql = "insert into movies (#{movie_hash.keys.join(', ')}) values ('#{movie_hash.values.join('\', \'')}')"
+rescue
+  puts "Data was bad. Not entered into database."
+end
 
 conn.exec(sql)
 
